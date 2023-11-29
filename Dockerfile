@@ -1,9 +1,12 @@
-FROM alpine:latest
+FROM ubuntu:latest
 
-RUN apk --update add ruby 
+RUN apt-get update && \
+    apt-get install -y build-essential
 
 WORKDIR /app
 
-COPY  . /app
+COPY . .
 
-CMD ["ruby", "simple_program.rb"]
+RUN gcc -o jen jen.c
+
+CMD ["./jen"]

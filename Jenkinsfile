@@ -7,7 +7,7 @@ pipeline
         {
             steps
             {
-                sh ' rm -rf * '  
+                sh ' rm -rf * '
                 sh ' git clone https://github.com/RameshXT/Docker-jenkins-tasks.git -b Docker '
             }
         }
@@ -15,14 +15,14 @@ pipeline
         {
             steps
             {
-                sh ' docker build -t imruby:v1 . '
+                sh ' docker build -t jen . '
             }
         }
         stage( "Run" )
         {
             steps
             {
-                sh ' docker run -it --name rubyscontainer imruby:v1 '
+                sh ' docker run -it --name rubyscontainer jen '
             }
         }
     }
