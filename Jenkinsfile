@@ -1,29 +1,54 @@
-pipeline
+pipeline 
 {
     agent any
-    stages
+    stages 
     {
-        stage( "Clone" )
+        stage("Clean") 
         {
-            steps
+            steps 
             {
-                sh ' rm -rf * '
-                sh ' git clone https://github.com/RameshXT/Docker-jenkins-tasks.git -b Docker '
+                script 
+                {
+                    def containers = sh(script: 'docker ps -a -q', returnStdout: true).trim()
+                    if (containers) 
+                    {
+                        sh "docker stop $containers"
+                        sh "docker rm $containers"
+                    }
+                    def images = sh(script: 'docker images -q', returnStdout: true).trim()
+                    if (images) 
+                    {
+                        sh "docker rmi $images"
+                    }
+                    sh 'sudo rm -rf /var/lib/jenkins/workspace/Docker/*'
+                }
             }
         }
-        stage( "Build" )
+        stage("Clone") 
         {
-            steps
-            {
-                sh ' docker build -t jen . '
+            steps {
+                sh 'sudo git clone -b python https://github.com/RameshXT/Docker-jenkins-tasks.git'
             }
         }
-        stage( "Run" )
+        stage("Build") 
         {
-            steps
-            {
-                sh ' docker run -it --name rubyscontainer jen '
+            steps {
+                sh 'sudo docker build -t app /var/lib/jenkins/workspace/Docker/Docker-jenkins-tasks'
             }
+        }
+        stage("Run") 
+        {
+            steps {
+                sh 'sudo docker run -it -d app'
+            }
+        }
+    }
+    post {
+        success {
+            echo 'Build successful!'
+        }
+        failure {
+            echo 'Build failed!'
         }
     }
 }
