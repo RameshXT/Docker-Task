@@ -27,7 +27,7 @@ pipeline
         stage("Clone") 
         {
             steps {
-                sh 'sudo git clone -b python https://github.com/RameshXT/Docker-jenkins-tasks.git'
+                sh 'sudo git clone -b Python https://github.com/RameshXT/Docker-Task.git'
             }
         }
         stage("Build") 
